@@ -13,6 +13,7 @@ all:
 	
 setup:
 	pip install --user mmh3
+	pip install --user future
 
 	mkdir -p $(DATA)
 	mkdir -p $(OUT)
@@ -91,3 +92,23 @@ prof:
 			--dev_iters 1000 \
 			--train_max 10000 --dev_max 1000 --test_max 1000 
 	
+EXPNAME=default
+FEATS_ID=dsl
+FEAT_FOLDER=$(DATA)/features/$(FEATS_ID)
+OUT_FOLDER=$(OUT)/$(EXPNAME)
+
+sbatch:
+	mkdir -p $(OUT_FOLDER) && \
+	printf "#!/bin/bash\n\
+	python -u classify.py --train $(FEAT_FOLDER)/train.txt --dev $(FEAT_FOLDER)/dev.txt --test $(FEAT_FOLDER)/test-blind.txt --test_out $(OUT_FOLDER)/test.txt --labels $(FEAT_FOLDER)/labels.txt > $(OUT_FOLDER)/stdout.txt 2>&1" > $(OUT_FOLDER)/run.sh && \
+	chmod +x run.sh && \
+	sbatch --time=360 --job-name=$(EXPNAME) $(OUT_FOLDER)/run.sh
+FORCE:
+
+squeue:
+	squeue --user=$(USERNAME)	
+FORCE:
+
+scancel:
+	scancel --name $(EXPNAME)
+FORCE:
