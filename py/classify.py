@@ -87,6 +87,7 @@ def write_labels(out_file, yhats, model, dataname):
             f.write(model.lookup_label(yhats[i]))
             f.write('\n')
 
+
 class Model:
     
     def __init__(self, num_features, labels_path):
@@ -113,7 +114,8 @@ class Model:
                 self.label2idx[label] = idx
                 self.idx2label.append(label)
     
-def learn(train, dev, model, initial_lr, num_epochs=1, dev_iters=None):
+
+def learn(train, dev, model, num_epochs=1, dev_iters=None):
     '''Learn a model on the given training data, using the development for validation.
 
     Args:
@@ -126,11 +128,10 @@ def learn(train, dev, model, initial_lr, num_epochs=1, dev_iters=None):
     model.params = np.zeros(shape=(model.num_labels, model.num_features), dtype=np.float)
     t = 0
     next_print = 1
-    learning_rate = initial_lr
     for epoch in range(num_epochs):        
         # Run SGD for one pass through the train data.
         for x, y in train.iterdata():
-            sgd_step(model.params, x, y, t, learning_rate)
+            sgd_step(model.params, x, y, t)
             t += 1
             if t == next_print:
                 next_print *= 2
@@ -149,10 +150,11 @@ def learn(train, dev, model, initial_lr, num_epochs=1, dev_iters=None):
             logging.info('Epoch: %d Iteration: %d Features: %d Accuracy on dev: %.2f' % 
                          (epoch, t, len(x), accuracy))
 
-def sgd_step(params, x, y, t, learning_rate):
+def sgd_step(params, x, y, t):
     #grad_row, grad_col, grad_val = sparse_get_gradient(params, x, y)
     #sparse_update_params(params, grad_row, grad_col, grad_val)
     
+    learning_rate = 0.1
     num_labels = params.shape[0]
     p = get_probabilities(params, x)
     for yprime in range(num_labels):
@@ -238,7 +240,7 @@ def main(args):
 
     summarize(model)
     
-    learn(train, dev, model, args.learning_rate,
+    learn(train, dev, model,
           args.num_epochs, args.dev_iters)
 
     datasets = [train, dev, test]
@@ -265,7 +267,6 @@ if __name__ == '__main__':
     # Model options
     parser.add_argument('--num_features', type=int, default=1000000, help='Maximum number of features')
     parser.add_argument('--labels', required=True, help='Labels file')
-    parser.add_argument('--learning_rate', type=float, default=0.1)
     
     # Training options
     parser.add_argument('--num_epochs', type=int, default=1, help='Num training passes')

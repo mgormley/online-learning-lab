@@ -32,26 +32,12 @@ def main(args):
                     for word in words:
                         f_out.write(word)
                         f_out.write(' ')
-
-                # add the features for the character ngrams.
-                if args.char_ngram_upto > 0:
-                    n = len(sent)
-                    for k in xrange(args.char_ngram_upto):
-                        for i in xrange(n - k):
-                            x = sent[i:i + k + 1].replace(' ', '_')
-                            f_out.write(x)
-                            f_out.write(' ')
-                     
-                # write the final character.                
                 f_out.write('\n')
-    
-
-
+                
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', required=True, help='Input file')
     parser.add_argument('-o', '--output', required=True, help='Output file')
-    parser.add_argument('--char_ngram_upto', type=int, default=0)
     args = parser.parse_args()
 
     main(args)
