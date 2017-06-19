@@ -1,0 +1,8 @@
+*.pyc
+*~
+.#*
+\#*\#
+
+# data directory
+data/
+output/
