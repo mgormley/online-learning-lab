@@ -19,4 +19,3 @@ Run the following to download the data and install various dependencies.
 	cd py
 	make setup
 	
-
