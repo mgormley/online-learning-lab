@@ -1,8 +1,8 @@
-# Jelinek Summer School - Machine Learning Lab
+# Machine Learning Lab
 
 ## Summary
 
-This three hour lab was designed for the 2017 Jelinek Summer School at
+This three hour lab was designed for NASSLLI 2018 and the 2017 Jelinek Summer School at
 Carnegie Mellon University. Students will learn about the efficient
 implementation of online learning (i.e. stochastic gradient descent)
 through a choose-your-own-adventure style exercise. The task is
