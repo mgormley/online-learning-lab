@@ -151,9 +151,6 @@ def learn(train, dev, model, num_epochs=1, dev_iters=None):
                          (epoch, t, len(x), accuracy))
 
 def sgd_step(params, x, y, t):
-    #grad_row, grad_col, grad_val = sparse_get_gradient(params, x, y)
-    #sparse_update_params(params, grad_row, grad_col, grad_val)
-    
     learning_rate = 0.1
     num_labels = params.shape[0]
     p = get_probabilities(params, x)
