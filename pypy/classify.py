@@ -284,7 +284,7 @@ if __name__ == '__main__':
     parser.add_argument('--stats',  help='Stats output file')
     
     # Model options
-    parser.add_argument('--num_features', type=int, default=1000000, help='Maximum number of features')
+    parser.add_argument('--num_features', type=int, default=10000, help='Maximum number of features')
     parser.add_argument('--labels', required=True, help='Labels file')
     
     # Training options
