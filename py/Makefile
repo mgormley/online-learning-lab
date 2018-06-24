@@ -10,20 +10,16 @@ TEAM=UPDATE_TEAM_IN_MAKEFILE
 
 all:
 	echo "Use one of the commands."
-	
+
 setup:
 	pip install --user mmh3
 	pip install --user future
 
 	mkdir -p $(DATA)
 	mkdir -p $(OUT)
-	
+
 	cd $(DATA) && wget http://www.cs.cmu.edu/~mgormley/temp/langid.tgz
 	tar -xzf $(DATA)/langid.tgz -C $(DATA)
-	
-submit:
-	echo "Run the following command:"
-	echo "scp $(OUT)/test-{tat,dsl}.txt <username>@bridges.psc.edu:/pylon2/ci560op/mgormley/submissions/$(TEAM)/"
 
 dsl: dslf dslc
 
@@ -41,7 +37,6 @@ dslc:
 			--test $(FEAT_DSL)/test-blind.txt \
 			--test_out $(OUT)/test-dsl.txt \
 			--labels $(FEAT_DSL)/labels.txt \
-			--dev_iters 50000
 
 dslcfast:
 	python classify.py \
@@ -51,8 +46,8 @@ dslcfast:
 			--test_out $(OUT)/test-dslfast.txt \
 			--labels $(FEAT_DSL)/labels.txt \
 			--dev_iters 200 \
-			--train_max 1000 --dev_max 100 --test_max 100 
-	
+			--train_max 1000 --dev_max 100 --test_max 100
+
 tat: tatf tatc
 
 tatf:
@@ -70,8 +65,8 @@ tatc:
 			--test_out $(OUT)/test-tat.txt \
 			--labels $(FEAT_TAT)/labels.txt \
 			--dev_iters 100000 \
-			--train_max 1000000 --dev_max 100000 
-			
+			--train_max 1000000 --dev_max 100000
+
 tatcfast:
 	python classify.py \
 			--train $(FEAT_TAT)/train.txt \
@@ -81,7 +76,7 @@ tatcfast:
 			--labels $(FEAT_TAT)/labels.txt \
 			--dev_iters 200 \
 			--train_max 1000 --dev_max 100 --test_max 100
-			
+
 prof:
 	python -m cProfile -s cumtime classify.py \
 			--train $(FEAT_DSL)/train.txt \
@@ -90,25 +85,4 @@ prof:
 			--test_out $(OUT)/test-prof.txt \
 			--labels $(FEAT_DSL)/labels.txt \
 			--dev_iters 1000 \
-			--train_max 10000 --dev_max 1000 --test_max 1000 
-	
-EXPNAME=default
-FEATS_ID=dsl
-FEAT_FOLDER=$(DATA)/features/$(FEATS_ID)
-OUT_FOLDER=$(OUT)/$(EXPNAME)
-
-sbatch:
-	mkdir -p $(OUT_FOLDER) && \
-	printf "#!/bin/bash\n\
-	python -u classify.py --train $(FEAT_FOLDER)/train.txt --dev $(FEAT_FOLDER)/dev.txt --test $(FEAT_FOLDER)/test-blind.txt --test_out $(OUT_FOLDER)/test.txt --labels $(FEAT_FOLDER)/labels.txt > $(OUT_FOLDER)/stdout.txt 2>&1" > $(OUT_FOLDER)/run.sh && \
-	chmod +x run.sh && \
-	sbatch --time=360 --job-name=$(EXPNAME) $(OUT_FOLDER)/run.sh
-FORCE:
-
-squeue:
-	squeue --user=$(USERNAME)	
-FORCE:
-
-scancel:
-	scancel --name $(EXPNAME)
-FORCE:
+			--train_max 10000 --dev_max 1000 --test_max 1000

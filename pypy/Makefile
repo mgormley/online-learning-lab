@@ -11,19 +11,12 @@ PYTHON=pypy3
 
 all:
 	echo "Use one of the commands."
-	
-setup:
-	pip install --user mmh3
 
+setup:
 	mkdir -p $(DATA)
 	mkdir -p $(OUT)
-	
 	cd $(DATA) && wget http://www.cs.cmu.edu/~mgormley/temp/langid.tgz
 	tar -xzf $(DATA)/langid.tgz -C $(DATA)
-	
-submit:
-	echo "Run the following command:"
-	echo "scp $(OUT)/test-{tat,dsl}.txt <username>@bridges.psc.edu:/pylon2/ci560op/mgormley/submissions/$(TEAM)/"
 
 dsl: dslf dslc
 
@@ -40,8 +33,7 @@ dslc:
 			--dev $(FEAT_DSL)/dev.txt \
 			--test $(FEAT_DSL)/test-blind.txt \
 			--test_out $(OUT)/test-dsl.txt \
-			--labels $(FEAT_DSL)/labels.txt 
-			#--dev_iters 50000
+			--labels $(FEAT_DSL)/labels.txt
 
 dslcfast:
 	$(PYTHON) classify.py \
@@ -51,8 +43,8 @@ dslcfast:
 			--test_out $(OUT)/test-dslfast.txt \
 			--labels $(FEAT_DSL)/labels.txt \
 			--dev_iters 200 \
-			--train_max 1000 --dev_max 100 --test_max 100 
-	
+			--train_max 1000 --dev_max 100 --test_max 100
+
 tat: tatf tatc
 
 tatf:
@@ -70,8 +62,8 @@ tatc:
 			--test_out $(OUT)/test-tat.txt \
 			--labels $(FEAT_TAT)/labels.txt \
 			--dev_iters 100000 \
-			--train_max 1000000 --dev_max 100000 
-			
+			--train_max 1000000 --dev_max 100000
+
 tatcfast:
 	$(PYTHON) classify.py \
 			--train $(FEAT_TAT)/train.txt \
@@ -81,7 +73,7 @@ tatcfast:
 			--labels $(FEAT_TAT)/labels.txt \
 			--dev_iters 200 \
 			--train_max 1000 --dev_max 100 --test_max 100
-			
+
 prof:
 	$(PYTHON) -m cProfile -s cumtime classify.py \
 			--train $(FEAT_DSL)/train.txt \
