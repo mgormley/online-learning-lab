@@ -7,7 +7,7 @@ def main(args):
                 # Read / parse line
                 lang, sent = line.strip().split('\t')
 
-                # Write features
+                # Write label
                 f_out.write(lang)
                 # Write tab character
                 f_out.write('\t')

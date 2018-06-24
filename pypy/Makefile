@@ -25,7 +25,7 @@ dslf:
 	$(PYTHON) features.py -i $(SIM_DSL)/train.txt -o $(FEAT_DSL)/train.txt
 	$(PYTHON) features.py -i $(SIM_DSL)/dev.txt -o $(FEAT_DSL)/dev.txt
 	$(PYTHON) features.py -i $(SIM_DSL)/test-blind.txt -o $(FEAT_DSL)/test-blind.txt
-	cp $(SIM_DSL)/labels.txt $(FEAT_DSL)/labels.txt
+	cp $(SIM_DSL)/labels.txt $(FEAT_DSL)/labels.txt	
 
 dslc:
 	$(PYTHON) classify.py \

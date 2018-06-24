@@ -68,7 +68,6 @@ def get_features(feat_strs, num_features):
 
 def get_feature(feat_str, num_features):
     # The feature string may be unicode, but MurmurHash3 expects ASCII encoded strings.
-    #return mmh3.hash(feat_str.encode('ascii', 'xmlcharrefreplace')) % num_features
     return hash(feat_str) % num_features
 
 def write_labels(out_file, yhats, model, dataname):
