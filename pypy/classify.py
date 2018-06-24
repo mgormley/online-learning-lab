@@ -129,7 +129,7 @@ def learn(train, dev, model, num_epochs=1, dev_iters=None, learning_rate=1.0):
     for epoch in range(num_epochs):        
         # Run SGD for one pass through the train data.
         for x, y in train.iterdata():
-            sgd_step(model.params, x, y, t, model.num_labels, learning_rate)
+            sgd_step(model.params, model.num_labels, model.num_features, x, y, t, learning_rate)
             t += 1
             if t == next_print:
                 next_print *= 2
@@ -148,32 +148,32 @@ def learn(train, dev, model, num_epochs=1, dev_iters=None, learning_rate=1.0):
             logging.info('Epoch: %d Iteration: %d Features: %d Accuracy on dev: %.2f' % 
                          (epoch, t, len(x), accuracy))
 
-def sgd_step(params, x, y, t, num_labels, learning_rate):
+def sgd_step(params, num_labels, num_features, x, y, t, learning_rate):
     """Take one stochastic gradient descent step."""
-    p = get_probabilities(params, x, num_labels)
+    p = get_probabilities(params, num_labels, num_features, x)
     for yprime in range(num_labels):
         for feat in x:
             if yprime == y: v = 1
             else:           v = 0
-            params[yprime * num_labels + feat] += learning_rate * (v - p[yprime])
+            params[yprime * num_features + feat] += learning_rate * (v - p[yprime])
 
-def get_probabilities(params, x, num_labels):
+def get_probabilities(params, num_labels, num_features, x):
     """Compute the probabilities p(y | x) for all values y."""
     # Get scores
     p = zeros_float(num_labels)
     for y in range(len(p)):
-        p[y] = fastdot(params, x, y, num_labels)
+        p[y] = fastdot(params, x, y, num_features)
     # Exponentiate then normalize
     softmax(p)
     return p
     
-def fastdot(params, x, y, num_labels):
+def fastdot(params, x, y, num_features):
     """Compute the score w^T f(x,y), where w is the parameter vector and 
     f(x,y) is a feature vector.
     """
     dot = 0
     for feat in x:
-        dot += params[y * num_labels + feat] 
+        dot += params[y * num_features + feat] 
     return dot
 
 def softmax(v):
@@ -208,7 +208,7 @@ def predict_and_eval(model, dataset):
     yhats = []
     for x, y in dataset.iterdata():
         # Predict
-        p = get_probabilities(model.params, x, model.num_labels)
+        p = get_probabilities(model.params, model.num_labels, model.num_features, x)
         yhat = argmax(p)
         yhats.append(yhat)
         # Evaluate

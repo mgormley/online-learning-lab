@@ -9,18 +9,14 @@ def main(args):
 
                 # Write features
                 f_out.write(lang)
+                # Write tab character
                 f_out.write('\t')
-                if lang == 'cmn' or lang == 'jpn':
-                    # Treat each character as a feature, since there are no words.
-                    for ch in sent:
-                        f_out.write(ch)
-                        f_out.write(' ')
-                else:
-                    # Treat each word as a feature.
-                    words = sent.split(' ')
-                    for word in words:
-                        f_out.write(word)
-                        f_out.write(' ')
+                # Treat each word as a feature.
+                words = sent.split(' ')
+                for word in words:
+                    f_out.write(word)
+                    f_out.write(' ')
+                # Write final endline
                 f_out.write('\n')
                 
 if __name__ == '__main__':
